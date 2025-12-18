@@ -22,6 +22,8 @@ export function ARWorkoutArea() {
   // Optional: if you notice sound is a tiny bit early/late, tweak this.
   // Example: 120 means "start audio 120ms after GIF begins"
   const syncOffsetMs = 0;
+  const API_BASE = import.meta.env.VITE_API_BASE_URL || "";
+
 
   const stopSession = () => {
     // Stop webcam
@@ -71,9 +73,11 @@ export function ARWorkoutArea() {
 
       // 2) Get buddy GIF URL from backend
       // backend should return: { buddyImageUrl: "/buddy-gifs/legs.gif" }
+      const API_BASE = import.meta.env.VITE_API_BASE_URL || "";
       const res = await fetch(
-        `/api/buddy?workoutType=${workoutType}&buddyType=${buddyType}`
-      );
+         `${API_BASE}/api/buddy?workoutType=${workoutType}&buddyType=${buddyType}`
+        );
+
       if (!res.ok) throw new Error("Buddy API failed");
       const data = await res.json();
 
