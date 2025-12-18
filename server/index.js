@@ -6,43 +6,27 @@ const path = require("path");
 const app = express();
 app.use(cors());
 app.use(express.json());
+app.use(express.static(path.join(__dirname, "public")));
 
-// ----------------------------------------------------
-// Health check (useful for testing proxy connection)
-// ----------------------------------------------------
 app.get("/api/health", (req, res) => {
   res.json({ ok: true });
 });
 
-// ----------------------------------------------------
-// Buddy video API
-// Returns a safe video URL based on workout selection
-// ----------------------------------------------------
 app.get("/api/buddy", (req, res) => {
   const workoutType = (req.query.workoutType || "legs").toLowerCase();
   const buddyType = (req.query.buddyType || "celebrity").toLowerCase();
 
-  // Allowed workouts (prevents weird paths)
-  const allowedWorkouts = ["abs", "legs", "cardio"];
-  const safeWorkout = allowedWorkouts.includes(workoutType)
-    ? workoutType
-    : "legs";
+  const allowed = ["abs", "legs", "cardio"];
+  const safeWorkout = allowed.includes(workoutType) ? workoutType : "legs";
 
-  // For demo purposes, we ignore buddyType and return a local video.
-  // Later, this is where RapidAPI logic would go.
-  const buddyVideoUrl = `/buddy-videos/${safeWorkout}.mp4`;
-
-  return res.json({
+  res.json({
     workoutType: safeWorkout,
     buddyType,
-    buddyVideoUrl,
+    buddyImageUrl: `/buddy-gifs/${safeWorkout}.gif`,
+    buddyAudioUrl: `/buddy-audio/${safeWorkout}.mp3`,
+    durationMs: 12000 // IMPORTANT: how long the workout lasts
   });
 });
 
-// ----------------------------------------------------
-// Start server
-// ----------------------------------------------------
-const PORT = 5050;
-app.listen(PORT, () => {
-  console.log(`Backend running on http://localhost:${PORT}`);
-});
+const PORT = process.env.PORT || 5050;
+app.listen(PORT, () => console.log(`Backend running on port ${PORT}`));
