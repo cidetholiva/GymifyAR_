@@ -50,7 +50,7 @@ export function Footer() {
 
           {/* Copyright */}
           <div className="text-sm text-cyan-200/50 text-center md:text-right">
-            © 2024 Gymify AR
+            © 2025 Gymify AR —Cideth Oliva
           </div>
         </motion.div>
       </div>
